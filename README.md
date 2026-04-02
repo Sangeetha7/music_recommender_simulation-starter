@@ -216,3 +216,16 @@ A few sentences about what you learned:
 - How did building this change how you think about real music recommenders
 - Where do you think human judgment still matters, even if the model seems "smart"
 
+## Terminal output showing the recommendations (song titles, scores, and reasons)
+
+![Terminal Output](images/recommendation_terminal_output.png)
+ 
+## Terminal Output for Stress Test with Diverse Profiles
+
+![Terminal Output](images/aggressive_lullaby.png)
+![Terminal Output](images/chill_lofi.png)
+![Terminal Output](images/deep_intense_rock.png)
+![Terminal Output](images/high_energy_pop.png)
+![Terminal Output](images/zero_energy_edm.png)
+![Terminal Output](images/high_energy_sad.png)
+
