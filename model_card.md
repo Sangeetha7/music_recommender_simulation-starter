@@ -1,105 +1,36 @@
 # 🎧 Model Card: Music Recommender Simulation
 
-## 1. Model Name  
+## Model Name
+**MatchYourVibe**
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
+## Goal / Task
+This system suggests 3 to 5 songs based on what a user wants to hear. It matches a user's taste profile (genre, mood, and energy) to the songs in our database to find the best fit.
 
----
+## Data Used
+The dataset is very small. It only has 17 songs. Each song has acoustic features (like energy and tempo) and text tags (like genre and mood). It does not include lyrics or user listening history. The data mostly covers extreme ends, like very high-energy pop or very quiet classical music.
 
-## 2. Intended Use  
+## Algorithm Summary
+We use a simple math formula to score each song. 
+1. If the genre matches exactly, the song gets 1 point.
+2. If the mood matches exactly, it gets 1 point.
+3. The closer the song's energy is to the user's target energy, the more points it gets (up to 2 points max). 
+The songs with the highest total scores win and get recommended first.
 
-Describe what your recommender is designed to do and who it is for. 
+## Observed Behavior / Biases
+The system struggles with contradictory requests. For example, if you ask for "Zero-Energy EDM", it gets confused and might give you sad classical music just to match the zero-energy rule. It also creates filter bubbles. Because it looks for exact word matches, asking for "lofi" means you will only ever get lofi songs, missing out on similar tracks.
 
-Prompts:  
+## Evaluation Process
+I tested standard profiles like "High-Energy Pop" and "Chill Lofi" to see if the normal math worked. Then, I tested trick profiles like "Aggressive Lullaby" to try and break the system. I read the terminal output to make sure the score explanations made sense. I also ran automated Python tests to prove my math changes were correct.
 
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
+## Intended Use and Non-Intended Use
+This system is meant for classroom exploration and learning about basic recommendation math. It is NOT for real users. It should not be used as a real product because the catalog is too small and the scoring is too simple to handle complex human tastes.
 
----
+## Ideas for Improvement
+1. **Use strict filters:** Force the system to only show hip-hop if you ask for hip-hop, instead of using points for genre.
+2. **Use more song features:** Include tempo and danceability to make the matched songs smarter.
+3. **Fuzzy matching:** Treat words like "chill", "relaxed", and "calm" as the same mood instead of requiring an exact match.
 
-## 3. How the Model Works  
+## Personal Reflection
+My biggest learning moment was seeing how basic math can create major blind spots. Just adding points together breaks when user preferences contradict themselves. I was also very surprised by how a simple algorithm can still feel like a real app. For standard profiles like "Chill Lofi", checking just three basic features easily created a convincing playlist! 
 
-Explain your scoring approach in simple language.  
-
-Prompts:  
-
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
-
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
-
----
-
-## 4. Data  
-
-Describe the dataset the model uses.  
-
-Prompts:  
-
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
-
----
-
-## 5. Strengths  
-
-Where does your system seem to work well  
-
-Prompts:  
-
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
-
----
-
-## 6. Limitations and Bias 
-
-Where the system struggles or behaves unfairly. 
-
-- **Features it does not consider:** The recommender currently ignores several rich audio features available in the dataset like tempo, valence, and acousticness. It also lacks any understanding of lyrics, cultural context, or collaborative user behavior (like skip rates or replay history).
-- **Genres or moods underrepresented:** The small 17-song catalog is heavily polarized towards extreme high-energy (pop/EDM/rock) or extreme low-energy (lofi/ambient/classical). This severely underserves users who prefer mid-range, moderate-energy music.
-- **Overfitting and "Echo Chambers":** Because genre and mood are scored as exact string matches, the system traps users in a filter bubble. If a user asks for "lofi", they will only be recommended lofi songs, leaving zero room for serendipitous discovery of a mathematically similar jazz or acoustic track.
-- **Unintentional user favoritism:** The system systematically favors users who happen to guess the exact text taxonomy of the database (e.g., typing "chill" instead of "relaxed" or "calm"). Additionally, the "energy gap" calculation uses a symmetrical absolute variance; for an intense workout playlist, the math treats a slightly slower song and a vastly faster song as equally "bad", whereas a human would strongly prefer the faster track.  
-
----
-
-## 7. Evaluation  
-
-How you checked whether the recommender behaved as expected. 
-
-- **Profiles Tested:** I tested standard, harmonious user profiles like "High-Energy Pop", "Chill Lofi", and "Deep Intense Rock". I also tested "adversarial" edge-case profiles designed to trick the math, like "High-Energy Sad", "Zero-Energy EDM", and "Aggressive Lullaby".
-- **What I looked for:** I analyzed the terminal output to see if the top 3-5 songs actually resonated with the requested vibe, and if the generated explanation text logically justified the score.
-- **What Surprised Me:** I was surprised by how much a simple points-based system struggles with contradictions. Before tweaking the weights, someone asking for "Zero-Energy EDM" was given the loudest, most energetic club track just because it had the "EDM" label. After changing the math to favor energy over genre, they were given sad classical string music! It showed how hard it is to balance categorical labels against acoustic reality.
-- **Simple Tests:** I verified the underlying logic by running `pytest` to ensure mathematical changes to the scoring formula were sound, and repeatedly ran the standard `main.py` simulation to visually inspect changes in the ranked outputs.
-
----
-
-## 8. Future Work  
-
-Ideas for how you would improve the model next.  
-
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
-
----
-
-## 9. Personal Reflection  
-
-A few sentences about your experience.  
-
-Prompts:  
-
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+Using AI tools helped me brainstorm those weird edge cases (like "Zero-Energy EDM") and quickly format text. However, I still had to double-check the logic when updating the energy math to make sure the new scoring passed the tests and made mathematical sense. If I extended this project, I would try adding collaborative filtering (recommending based on what similar users like) so the system isn't forced to rely entirely on strict tags.  
