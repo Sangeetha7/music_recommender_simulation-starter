@@ -63,12 +63,10 @@ Prompts:
 
 Where the system struggles or behaves unfairly. 
 
-Prompts:  
-
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
+- **Features it does not consider:** The recommender currently ignores several rich audio features available in the dataset like tempo, valence, and acousticness. It also lacks any understanding of lyrics, cultural context, or collaborative user behavior (like skip rates or replay history).
+- **Genres or moods underrepresented:** The small 17-song catalog is heavily polarized towards extreme high-energy (pop/EDM/rock) or extreme low-energy (lofi/ambient/classical). This severely underserves users who prefer mid-range, moderate-energy music.
+- **Overfitting and "Echo Chambers":** Because genre and mood are scored as exact string matches, the system traps users in a filter bubble. If a user asks for "lofi", they will only be recommended lofi songs, leaving zero room for serendipitous discovery of a mathematically similar jazz or acoustic track.
+- **Unintentional user favoritism:** The system systematically favors users who happen to guess the exact text taxonomy of the database (e.g., typing "chill" instead of "relaxed" or "calm"). Additionally, the "energy gap" calculation uses a symmetrical absolute variance; for an intense workout playlist, the math treats a slightly slower song and a vastly faster song as equally "bad", whereas a human would strongly prefer the faster track.  
 
 ---
 
@@ -76,14 +74,10 @@ Prompts:
 
 How you checked whether the recommender behaved as expected. 
 
-Prompts:  
-
-- Which user profiles you tested  
-- What you looked for in the recommendations  
-- What surprised you  
-- Any simple tests or comparisons you ran  
-
-No need for numeric metrics unless you created some.
+- **Profiles Tested:** I tested standard, harmonious user profiles like "High-Energy Pop", "Chill Lofi", and "Deep Intense Rock". I also tested "adversarial" edge-case profiles designed to trick the math, like "High-Energy Sad", "Zero-Energy EDM", and "Aggressive Lullaby".
+- **What I looked for:** I analyzed the terminal output to see if the top 3-5 songs actually resonated with the requested vibe, and if the generated explanation text logically justified the score.
+- **What Surprised Me:** I was surprised by how much a simple points-based system struggles with contradictions. Before tweaking the weights, someone asking for "Zero-Energy EDM" was given the loudest, most energetic club track just because it had the "EDM" label. After changing the math to favor energy over genre, they were given sad classical string music! It showed how hard it is to balance categorical labels against acoustic reality.
+- **Simple Tests:** I verified the underlying logic by running `pytest` to ensure mathematical changes to the scoring formula were sound, and repeatedly ran the standard `main.py` simulation to visually inspect changes in the ranked outputs.
 
 ---
 
