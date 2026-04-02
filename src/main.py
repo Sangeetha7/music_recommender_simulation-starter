@@ -28,16 +28,21 @@ def main() -> None:
     }
 
     for profile_name, user_prefs in user_profiles.items():
-        print(f"\n{'='*45}")
+        print(f"\n{'='*100}")
         print(f"Top 5 recommendations for: {profile_name}")
-        print(f"{'='*45}")
+        print(f"{'='*100}")
+        
+        # Simple ASCII Table Header
+        print(f"{'Song Title (Artist)':<45} | {'Score':<5} | {'Reasons'}")
+        print(f"{'-'*100}")
         
         recommendations = recommend_songs(user_prefs, songs, k=5)
 
         for rec in recommendations:
             song, score, explanation = rec
-            print(f"{song['title']} ({song['artist']}) - Score: {score:.2f}")
-            print(f"Because: {explanation}\n")
+            song_info = f"{song['title']} ({song['artist']})"
+            # Fixed-width formatting to create clean columns
+            print(f"{song_info:<45} | {score:>.2f} | {explanation}")
 
 
 if __name__ == "__main__":
